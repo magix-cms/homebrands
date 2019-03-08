@@ -29,7 +29,7 @@
             {/foreach}
         </amp-carousel>
     {else}
-        <div id="hombrands">
+        <div id="homebrands">
             <div class="container">
                 <div class="owl-carousel owl-theme owl-brands">
                     {foreach $brands as $brand}
