@@ -21,7 +21,7 @@
         {$debug}
     {/if}
     <header class="panel-header">
-        <h2 class="panel-heading h5">{#root_homecatalog#}</h2>
+        <h2 class="panel-heading h5">{#root_homebrands#}</h2>
     </header>
     <div class="panel-body panel-body-form">
         <div class="mc-message-container clearfix">

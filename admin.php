@@ -153,11 +153,11 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 					'edit'            => $name,
 					'prefix'          => array('s_','m_','l_'),
 					'module_img'      => 'plugins',
-					'attribute_img'   => 'slideshow',
+					'attribute_img'   => 'homebrands',
 					'original_remove' => false
 				),
 				array(
-					'upload_root_dir' => 'upload/slideshow', //string
+					'upload_root_dir' => 'upload/homebrands', //string
 					'upload_dir'      => $id //string ou array
 				),
 				$debug
@@ -175,11 +175,12 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 		}
 	}
 
-	/**
-	 * @param $name
-	 * @param $id
-	 * @return null|string
-	 */
+    /**
+     * @param $name
+     * @param $id
+     * @return null|string
+     * @throws Exception
+     */
 	private function slide_image($name, $id){
 		if(isset($this->img) && !empty($id)) {
 			return $this->insert_image(
@@ -198,7 +199,7 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 	 */
 	private function delete_image($id)
 	{
-		$makeFiles = new filesystem_makefile();
+		/*$makeFiles = new filesystem_makefile();
 		$path = $this->upload->dirImgUploadCollection(array(
 			'upload_root_dir' => 'upload/slideshow', //string
 			'upload_dir'      => $id //string ou array
@@ -216,7 +217,25 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 		}
 		else {
 			throw new Exception('file: ' . $img['img_slide'] . ' is not found');
-		}
+		}*/
+        $setImgDirectory = $this->upload->dirImgUpload(
+            array_merge(
+                array('upload_root_dir' => 'upload/homebrands/' . $id),
+                array('imgBasePath' => true)
+            )
+        );
+
+        if (file_exists($setImgDirectory)) {
+            $setFiles = $this->finder->scanDir($setImgDirectory);
+            $clean = '';
+            if ($setFiles != null) {
+                foreach ($setFiles as $file) {
+                    $clean .= $this->makeFiles->remove($setImgDirectory . $file);
+                }
+            }
+            $this->makeFiles->remove($setImgDirectory);
+            return true;
+        }
 	}
 
 	/**
@@ -237,7 +256,7 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 					'attribute_img' =>'slideshow'
 				));
 				foreach ($fetchConfig as $key => $value) {
-					$arr[$slide['id_slide']]['imgSrc'][$value['type_img']] = '/upload/slideshow/'.$slide['id_slide'].'/'.$imgPrefix[$value['type_img']] . $slide['img_slide'];
+					$arr[$slide['id_slide']]['imgSrc'][$value['type_img']] = '/upload/homebrands/'.$slide['id_slide'].'/'.$imgPrefix[$value['type_img']] . $slide['img_slide'];
 				}
 			}
 
@@ -330,6 +349,20 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 				break;
 		}
 	}
+
+    /**
+     * Adds the plugin in resizing images
+     * @return array
+     */
+    public function getItemsImages(){
+        $data = $this->getItems('img',NULL,'all',false);
+        $newArr = array();
+        foreach($data as $key => $value){
+            $newArr[$key]['id'] = $value['id_slide'];
+            $newArr[$key]['img'] = $value['img_slide'];
+        }
+        return $newArr;
+    }
 
 	/**
 	 * Affiche les pages de l'administration du plugin
@@ -440,7 +473,7 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 				'title_slide' => array('title' => 'name'),
 				'desc_slide' => array('title' => 'name')
 			);
-			$this->data->getScheme(array('mc_slideshow', 'mc_slideshow_content'), array('id_slide', 'url_slide', 'img_slide','title_slide','desc_slide'), $assign);
+			$this->data->getScheme(array('mc_homebrands', 'mc_homebrands_content'), array('id_slide', 'url_slide', 'img_slide','title_slide','desc_slide'), $assign);
 			$this->template->display('index.tpl');
 		}
 	}

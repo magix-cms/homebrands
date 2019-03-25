@@ -2,10 +2,10 @@
 {block name="stylesheets"}
     {headlink rel="stylesheet" href="/{baseadmin}/min/?f=plugins/{$smarty.get.controller}/css/admin.min.css" media="screen"}
 {/block}
-{block name='head:title'}slideshow{/block}
-{block name='body:id'}slideshow{/block}
+{block name='head:title'}homebrands{/block}
+{block name='body:id'}homebrands{/block}
 {block name='article:header'}
-    <h1 class="h2"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}" title="Afficher la liste des slides">slideshow</a></h1>
+    <h1 class="h2"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}" title="Afficher la liste des slides">homebrands</a></h1>
 {/block}
 {block name='article:content'}
     {if {employee_access type="edit" class_name=$cClass} eq 1}
@@ -25,7 +25,7 @@
                     <div class="mc-message-container clearfix">
                         <div class="mc-message"></div>
                     </div>
-                    {include file="form/slide.tpl" controller="slideshow"}
+                    {include file="form/slide.tpl" controller="homebrands"}
                 </div>
             </section>
         </div>
@@ -34,17 +34,17 @@
 
 {block name="foot" append}
     {capture name="scriptForm"}{strip}
-        /{baseadmin}/min/?f=plugins/slideshow/js/admin.min.js
+        /{baseadmin}/min/?f=plugins/homebrands/js/admin.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
 
     <script type="text/javascript">
         $(function(){
-            if (typeof slideshow == "undefined")
+            if (typeof homebrands == "undefined")
             {
-                console.log("slideshow is not defined");
+                console.log("homebrands is not defined");
             }else{
-                slideshow.runEdit();
+                homebrands.runEdit();
             }
         });
     </script>

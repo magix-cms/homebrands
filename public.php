@@ -83,8 +83,8 @@ class plugins_homebrands_public extends plugins_homebrands_db {
 			$imgData = pathinfo($slide['img_slide']);
 			$filename = $imgData['filename'];
 			foreach ($fetchConfig as $key => $value) {
-				$arr[$slide['id_slide']]['img'][$value['type_img']]['src'] = '/upload/slideshow/'.$slide['id_slide'].'/'.$imgPrefix[$value['type_img']] . $slide['img_slide'];
-				$arr[$slide['id_slide']]['img'][$value['type_img']]['src_webp'] = '/upload/slideshow/'.$slide['id_slide'].'/'.$imgPrefix[$value['type_img']] . $filename . '.'.$extwebp;
+				$arr[$slide['id_slide']]['img'][$value['type_img']]['src'] = '/upload/homebrands/'.$slide['id_slide'].'/'.$imgPrefix[$value['type_img']] . $slide['img_slide'];
+				$arr[$slide['id_slide']]['img'][$value['type_img']]['src_webp'] = '/upload/homebrands/'.$slide['id_slide'].'/'.$imgPrefix[$value['type_img']] . $filename . '.'.$extwebp;
 				$arr[$slide['id_slide']]['img'][$value['type_img']]['w'] = $value['width_img'];
 				$arr[$slide['id_slide']]['img'][$value['type_img']]['h'] = $value['height_img'];
 				$arr[$slide['id_slide']]['img'][$value['type_img']]['crop'] = $value['resize_img'];

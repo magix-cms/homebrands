@@ -11,7 +11,7 @@
             </div>
             <div class="preview-img">
                 {if isset($slide.img_slide) && !empty($slide.img_slide)}
-                    <img id="preview" src="/upload/slideshow/{$slide.id_slide}/{$slide.img_slide}" alt="Slide" class="preview img-responsive" />
+                    <img id="preview" src="/upload/homebrands/{$slide.id_slide}/{$slide.img_slide}" alt="Slide" class="preview img-responsive" />
                 {else}
                     <img id="preview" src="#" alt="Déposez votre images ici..." class="no-img img-responsive" />
                 {/if}
