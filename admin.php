@@ -252,8 +252,8 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 				$arr[$slide['id_slide']]['img_slide'] = $slide['img_slide'];
 				$imgPrefix = $this->imagesComponent->prefix();
 				$fetchConfig = $this->imagesComponent->getConfigItems(array(
-					'module_img'    =>'slideshow',
-					'attribute_img' =>'slideshow'
+					'module_img'    =>'homebrands',
+					'attribute_img' =>'homebrands'
 				));
 				foreach ($fetchConfig as $key => $value) {
 					$arr[$slide['id_slide']]['imgSrc'][$value['type_img']] = '/upload/homebrands/'.$slide['id_slide'].'/'.$imgPrefix[$value['type_img']] . $slide['img_slide'];
