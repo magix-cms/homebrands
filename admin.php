@@ -49,7 +49,14 @@ require_once ('db.php');
  */
 class plugins_homebrands_admin extends plugins_homebrands_db
 {
-    protected $controller, $message, $template, $plugins, $modelLanguage, $collectionLanguage, $data, $header, $upload, $imagesComponent, $routingUrl;
+    protected
+        $controller,
+        $message,
+        $template,
+        $plugins,
+        $modelLanguage,
+        $collectionLanguage,
+        $data, $header, $upload, $imagesComponent, $routingUrl;
 	/**
 	 * GET
 	 * @var $getlang,

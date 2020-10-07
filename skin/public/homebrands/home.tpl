@@ -34,13 +34,7 @@
                 <div class="owl-carousel owl-theme owl-brands">
                 {foreach $brands as $brand}
                     <div class="brand">
-                        {strip}<picture>
-                            <!--[if IE 9]><video style="display: none;"><![endif]-->
-                            <source type="image/webp" sizes="{$brand.img['medium']['w']}px" srcset="{$brand.img['small']['src_webp']} {$brand.img['medium']['w']}w">
-                            <source type="image/png" sizes="{$brand.img['medium']['w']}px" srcset="{$brand.img['small']['src']} {$brand.img['medium']['w']}w">
-                            <!--[if IE 9]></video><![endif]-->
-                            <img data-src="{$brand.img['medium']['src']}" alt="{$brand.title_slide}" width="{$brand.img['medium']['w']}" height="{$brand.img['medium']['h']}" class="img-responsive lazyload" />
-                        </picture>{/strip}
+                        {include file="img/img.tpl" img=$brand.img lazy=false size='small'}
                         {if isset($brand.url_slide) && !empty($brand.url_slide)}
                             <a href="{$brand.url_slide}" title="{$key.title_slide}" class="all-hover{if $brand.blank_slide} targetblank{/if}">{$brand.title_slide}</a>
                         {/if}

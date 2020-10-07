@@ -19,7 +19,7 @@ Il s'agit d'une copie du plugin slideshow afin d'afficher un caroussel de marque
 This file is a plugin of Magix CMS.
 Magix CMS, a CMS optimized for SEO
 
-Copyright (C) 2008 - 2018 magix-cms.com support[at]magix-cms[point]com
+Copyright (C) 2008 - 2020 magix-cms.com support[at]magix-cms[point]com
 
 AUTHORS :
 
