@@ -1,6 +1,32 @@
+// Compiler options
+@import (reference) "mixins";
+// ------------------
 #homebrands {
-	.owl-stage {
+	//background-color: var(--dark-color);
+	//padding: 8rem 0;
+	margin-bottom: var(--spacer);
+	.brands {
 		display: flex;
 		align-items: center;
+		//justify-content: space-between;
+		.brand{
+			position: relative;
+			padding: 0 1rem 0 1rem;
+		}
+	}
+}
+@media (max-width: .breakpoint(sm)[max]) {
+	#homebrands {
+		//background-color: var(--dark-color);
+		padding: 4rem 0;
+		.brands {
+			flex-direction: column;
+			.brand{
+				padding: 0 0 2rem 0;
+				&:last-child {
+					padding:0;
+				}
+			}
+		}
 	}
 }
