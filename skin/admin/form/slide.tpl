@@ -1,6 +1,6 @@
 <div class="row">
     <form id="edit_slide" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;tabs=slide&amp;action={if !$edit}add{else}edit{/if}" method="post" class="validate_form{if !$edit} add_form collapse in{else} edit_form{/if} col-ph-12 col-sm-8 col-md-6">
-        <div id="drop-zone"{if !isset($slide.img_slide) || empty($slide.img_slide)} class="no-img"{/if}>
+        <div id="drop-zone"{if !isset($slide.img.name) || empty($slide.img.name)} class="no-img"{/if}>
             <div id="drop-buttons" class="form-group">
                 <label id="clickHere" class="btn btn-default">
                     ou cliquez ici.. <span class="fa fa-upload"></span>
@@ -10,8 +10,8 @@
                 </label>
             </div>
             <div class="preview-img">
-                {if isset($slide.img_slide) && !empty($slide.img_slide)}
-                    <img id="preview" src="/upload/homebrands/{$slide.id_slide}/{$slide.img_slide}" alt="Slide" class="preview img-responsive" />
+                {if isset($slide.img.name) && !empty($slide.img.name)}
+                    <img id="preview" src="/upload/homebrands/{$slide.id_slide}/{$slide.img.name}" alt="Slide" class="preview img-responsive" />
                 {else}
                     <img id="preview" src="#" alt="Déposez votre images ici..." class="no-img img-responsive" />
                 {/if}

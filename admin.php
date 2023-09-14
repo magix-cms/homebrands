@@ -85,6 +85,8 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 		$this->upload = new component_files_upload();
 		$this->imagesComponent = new component_files_images($this->template);
 		$this->routingUrl = new component_routing_url();
+        $this->finder = new file_finder();
+        $this->makeFiles = new filesystem_makefile();
 
 		$formClean = new form_inputEscape();
 
@@ -159,7 +161,7 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 					'name'            => filter_rsa::randMicroUI(),
 					'edit'            => $name,
 					'prefix'          => array('s_','m_','l_'),
-					'module_img'      => 'plugins',
+					'module_img'      => 'homebrands',
 					'attribute_img'   => 'homebrands',
 					'original_remove' => false
 				),
@@ -225,19 +227,14 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 		else {
 			throw new Exception('file: ' . $img['img_slide'] . ' is not found');
 		}*/
-        $setImgDirectory = $this->upload->dirImgUpload(
-            array_merge(
-                array('upload_root_dir' => 'upload/homebrands/' . $id),
-                array('imgBasePath' => true)
-            )
-        );
+        $setImgDirectory = $this->routingUrl->dirUpload('upload/homebrands/' . $id,true);
 
         if (file_exists($setImgDirectory)) {
             $setFiles = $this->finder->scanDir($setImgDirectory);
             $clean = '';
             if ($setFiles != null) {
                 foreach ($setFiles as $file) {
-                    $clean .= $this->makeFiles->remove($setImgDirectory . $file);
+                    $this->makeFiles->remove($setImgDirectory . $file);
                 }
             }
             $this->makeFiles->remove($setImgDirectory);
@@ -254,17 +251,10 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 		$arr = array();
 		foreach ($data as $slide) {
 			if (!array_key_exists($slide['id_slide'], $arr)) {
-				$arr[$slide['id_slide']] = array();
-				$arr[$slide['id_slide']]['id_slide'] = $slide['id_slide'];
-				$arr[$slide['id_slide']]['img_slide'] = $slide['img_slide'];
-				$imgPrefix = $this->imagesComponent->prefix();
-				$fetchConfig = $this->imagesComponent->getConfigItems(array(
-					'module_img'    =>'homebrands',
-					'attribute_img' =>'homebrands'
-				));
-				foreach ($fetchConfig as $key => $value) {
-					$arr[$slide['id_slide']]['imgSrc'][$value['type_img']] = '/upload/homebrands/'.$slide['id_slide'].'/'.$imgPrefix[$value['type_img']] . $slide['img_slide'];
-				}
+                $arr[$slide['id_slide']] = [
+                    'id_slide' => $slide['id_slide'],
+                    'img' => $this->imagesComponent->setModuleImage('homebrands','homebrands',$slide['img_slide'],$slide['id_slide'])
+                ];
 			}
 
 			$arr[$slide['id_slide']]['content'][$slide['id_lang']] = array(

@@ -23,10 +23,7 @@ ALTER TABLE `mc_homebrands_content`
   ADD CONSTRAINT `mc_homebrands_content_ibfk_1` FOREIGN KEY (`id_slide`) REFERENCES `mc_homebrands` (`id_slide`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `mc_homebrands_content_ibfk_2` FOREIGN KEY (`id_lang`) REFERENCES `mc_lang` (`id_lang`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-INSERT INTO `mc_config_img` (`id_config_img`, `module_img`, `attribute_img`, `width_img`, `height_img`, `type_img`, `resize_img`) VALUES
-  (null, 'plugins', 'homebrands', '250', '155', 'small', 'adaptive'),
-  (null, 'plugins', 'homebrands', '750', '465', 'medium', 'adaptive'),
-  (null, 'plugins', 'homebrands', '1000', '1000', 'large', 'basic');
-
-INSERT INTO `mc_admin_access` (`id_role`, `id_module`, `view`, `append`, `edit`, `del`, `action`)
-  SELECT 1, m.id_module, 1, 1, 1, 1, 1 FROM mc_module as m WHERE name = 'homebrands';
+INSERT INTO `mc_config_img` (`id_config_img`, `module_img`, `attribute_img`, `width_img`, `height_img`, `type_img`, `prefix_img`, `resize_img`) VALUES
+  (null, 'homebrands', 'homebrands', '250', '155', 'small', 's', 'adaptive'),
+  (null, 'homebrands', 'homebrands', '750', '465', 'medium','m', 'adaptive'),
+  (null, 'homebrands', 'homebrands', '1000', '1000', 'large','l', 'basic');
