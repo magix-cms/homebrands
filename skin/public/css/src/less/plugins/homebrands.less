@@ -3,7 +3,7 @@
 // ------------------
 #homebrands {
 	//background-color: var(--dark-color);
-	//padding: 8rem 0;
+	padding: 4rem 0;
 	margin-bottom: var(--spacer);
 	.brands {
 		display: flex;
@@ -12,6 +12,16 @@
 		.brand{
 			position: relative;
 			padding: 0 1rem 0 1rem;
+			.figure {
+				transition: transform 0.4s;
+			}
+		}
+	}
+	.brand{
+		&:hover, &:focus {
+			.figure{
+				transform: scale(1.3) rotate(0.01deg);
+			}
 		}
 	}
 }

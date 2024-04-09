@@ -6,7 +6,7 @@
                     ou cliquez ici.. <span class="fa fa-upload"></span>
                     <input type="hidden" name="MAX_FILE_SIZE" value="4048576" />
                     <input type="file" id="img" name="img" />
-                    <input type="hidden" id="id_product" name="id" value="{$slide.id_slide}">
+                    <input type="hidden" id="id_slide" name="id" value="{$slide.id_slide}">
                 </label>
             </div>
             <div class="preview-img">
@@ -74,7 +74,7 @@
             {if $edit}
                 <input type="hidden" name="slide[id]" value="{$slide.id_slide}" />
             {/if}
-            <button class="btn btn-main-theme" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
+            <button class="btn btn-main-theme" type="submit">{#save#|ucfirst}</button>
         </fieldset>
     </form>
 </div>

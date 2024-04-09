@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS `mc_homebrands` (
-  `id_slide` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `img_slide` varchar(25) NOT NULL,
-  `order_slide` smallint(5) unsigned NOT NULL,
-  PRIMARY KEY (`id_slide`)
+    `id_slide` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `img_slide` varchar(25) DEFAULT NULL,
+    `order_slide` smallint(5) UNSIGNED NOT NULL,
+    PRIMARY KEY (`id_slide`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `mc_homebrands_content` (
@@ -24,6 +24,6 @@ ALTER TABLE `mc_homebrands_content`
   ADD CONSTRAINT `mc_homebrands_content_ibfk_2` FOREIGN KEY (`id_lang`) REFERENCES `mc_lang` (`id_lang`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 INSERT INTO `mc_config_img` (`id_config_img`, `module_img`, `attribute_img`, `width_img`, `height_img`, `type_img`, `prefix_img`, `resize_img`) VALUES
-  (null, 'homebrands', 'homebrands', '250', '155', 'small', 's', 'adaptive'),
+  (null, 'homebrands', 'homebrands', '250', '122', 'small', 's', 'adaptive'),
   (null, 'homebrands', 'homebrands', '750', '465', 'medium','m', 'adaptive'),
   (null, 'homebrands', 'homebrands', '1000', '1000', 'large','l', 'basic');

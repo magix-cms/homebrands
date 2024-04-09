@@ -69,13 +69,17 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 	 * @var $slide
 	 * @var $sliderorder
 	 */
-	public $slide, $slideshow, $img, $id;
+	public $slide, $homebrands, $img, $id;
 
 	/**
 	 * Constructor
 	 */
-	public function __construct(){
-		$this->template = new backend_model_template();
+    /**
+     * Construct class
+     */
+    public function __construct($t = null)
+    {
+        $this->template = $t ? $t : new backend_model_template;
 		$this->plugins = new backend_controller_plugins();
 		$this->message = new component_core_message($this->template);
 		$this->modelLanguage = new backend_model_language($this->template);
@@ -119,8 +123,8 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 			$this->img = http_url::clean($_FILES['img']["name"]);
 		}
 		// --- Order
-		if (http_request::isPost('slideshow')) {
-			$this->slideshow = $formClean->arrayClean($_POST['slideshow']);
+		if (http_request::isPost('homebrands')) {
+			$this->homebrands = $formClean->arrayClean($_POST['homebrands']);
 		}
 	}
 
@@ -144,17 +148,28 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 	private function getItems($type, $id = null, $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
 	}
+    /**
+     * @return void
+     */
+    private function initImageComponent(): void {
+        if(!isset($this->imagesComponent)) $this->imagesComponent = new component_files_images($this->template);
+    }
 
-	/**
-	 * Create and insert the address image
-	 * @param $img
-	 * @param $name
-	 * @param bool $debug
-	 * @return null|string
-	 * @throws Exception
-	 */
+    /**
+     * Create and insert the address image
+     * @param $img
+     * @param $name
+     * @param $id
+     * @param $debug
+     * @return array|void
+     */
 	private function insert_image($img, $name, $id, $debug = false){
+        $logger = new debug_logger(MP_LOG_DIR);
+        if($debug) {
+            $logger->tracelog('resultUpload start');
+        }
 		if(isset($this->$img)) {
+            //$resultUpload = [];
 			$resultUpload = $this->upload->setImageUpload(
 				'img',
 				array(
@@ -171,7 +186,9 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 				),
 				$debug
 			);
-
+            if($debug) {
+                $logger->tracelog(json_encode($resultUpload));
+            }
 			$this->upd(array(
 				'type' => 'img',
 				'data' => array(
@@ -179,7 +196,6 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 					'img_slide' => $resultUpload['file']
 				)
 			));
-
 			return $resultUpload;
 		}
 	}
@@ -187,10 +203,12 @@ class plugins_homebrands_admin extends plugins_homebrands_db
     /**
      * @param $name
      * @param $id
-     * @return null|string
-     * @throws Exception
+     * @return array|void|null
      */
 	private function slide_image($name, $id){
+        /*$logger = new debug_logger(MP_LOG_DIR);
+        $logger->tracelog('name');
+        $logger->tracelog(json_encode($name));*/
 		if(isset($this->img) && !empty($id)) {
 			return $this->insert_image(
 				'img',
@@ -243,12 +261,12 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 	}
 
 	/**
-	 * @param $data
+	 * @param array $data
 	 * @return array
 	 */
-	private function setItemSlideData($data)
-	{
+	private function setItemSlideData(array $data): array {
 		$arr = array();
+        $this->initImageComponent();
 		foreach ($data as $slide) {
 			if (!array_key_exists($slide['id_slide'], $arr)) {
                 $arr[$slide['id_slide']] = [
@@ -372,6 +390,7 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 				case 'add':
 				case 'edit':
 					if( isset($this->slide) && !empty($this->slide) ) {
+                        $logger = new debug_logger(MP_LOG_DIR);
 						$notify = 'update';
 						$img = null;
 
@@ -381,6 +400,7 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 						}
 
 						if (!isset($this->slide['id'])) {
+                            //$logger->tracelog('add');
 							$this->add(array(
 								'type' => 'slide'
 							));
@@ -394,6 +414,7 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 							$img = $this->slide_image($img, $this->slide['id']);
 							$img = $img['file'];
 						}
+                        //$logger->tracelog(json_encode($img));
 
 						$this->upd(array(
 							'type' => 'img',
