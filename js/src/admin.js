@@ -109,7 +109,7 @@ var homebrands = (function ($) {
                         var serial = $(".ui-sortable").sortable('serialize');
                         $.jmRequest({
                             handler: "ajax",
-                            url: '/admin/index.php?controller=slideshow&tabs=slide&action=order',
+                            url: '/admin/index.php?controller=homebrands&tabs=slide&action=order',
                             method: 'post',
                             data: serial,
                             successParams: function (e) {

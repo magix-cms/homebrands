@@ -28,7 +28,7 @@ class plugins_homebrands_db
                             LEFT JOIN mc_homebrands_content as slc USING(id_slide)
                             LEFT JOIN mc_lang as l USING(id_lang)
                             WHERE id_lang = :default_lang
-                            ORDER BY order_slide';
+                            ORDER BY order_slide ASC';
                     break;
                 case 'homeSlides':
                     $query = 'SELECT 
@@ -43,7 +43,7 @@ class plugins_homebrands_db
                             LEFT JOIN mc_lang as l USING(id_lang)
                             WHERE iso_lang = :lang
                             AND published_slide = 1
-                            ORDER BY order_slide';
+                            ORDER BY order_slide ASC';
                     break;
                 case 'slide':
                     $query = 'SELECT a.*,c.*

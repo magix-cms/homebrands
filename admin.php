@@ -293,7 +293,7 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 	public function order($type){
 		switch ($type) {
 			case 'home':
-				$p = $this->slideshow;
+				$p = $this->homebrands;
 				for ($i = 0; $i < count($p); $i++) {
 					parent::update(
 						array(
@@ -474,7 +474,7 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 					}
 					break;
 				case 'order':
-					if (isset($this->slideshow) && is_array($this->slideshow)) {
+					if (isset($this->homebrands) && is_array($this->homebrands)) {
 						$this->order('home');
 					}
 					break;
