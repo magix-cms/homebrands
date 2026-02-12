@@ -23,13 +23,13 @@
 	</authors>
 	<release>
 		<date_create>29/01/2019</date_create>
-		<date_update>14/09/2023</date_update>
-		<version>2.0</version>
+		<date_update>12/02/2026</date_update>
+		<version>3.0</version>
 		<phase>Stable</phase>
 	</release>
 	<support>
-		<ticket href="https://github.com/magix-cms/slideshow/issues"></ticket>
-		<git href="https://github.com/magix-cms/slideshow"></git>
+		<ticket href="https://github.com/magix-cms/homebrands/issues"></ticket>
+		<git href="https://github.com/magix-cms/homebrands"></git>
 	</support>
 </data>
 </config>

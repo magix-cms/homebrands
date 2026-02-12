@@ -156,21 +156,20 @@ class plugins_homebrands_admin extends plugins_homebrands_db
     }
 
     /**
-     * Create and insert the address image
-     * @param $img
-     * @param $name
-     * @param $id
-     * @param $debug
+     * @param string $img
+     * @param string $name
+     * @param int $id
+     * @param bool $debug
      * @return array|void
      */
-	private function insert_image($img, $name, $id, $debug = false){
+	private function insert_image(string $img, string $name, int $id, bool $debug = false){
         $logger = new debug_logger(MP_LOG_DIR);
         if($debug) {
             $logger->tracelog('resultUpload start');
         }
 		if(isset($this->$img)) {
             //$resultUpload = [];
-			$resultUpload = $this->upload->setImageUpload(
+			/*$resultUpload = $this->upload->setImageUpload(
 				'img',
 				array(
 					'name'            => filter_rsa::randMicroUI(),
@@ -185,17 +184,27 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 					'upload_dir'      => $id //string ou array
 				),
 				$debug
-			);
+			);*/
+            $resultUpload = $this->upload->imageUpload(
+                'homebrands',
+                'homebrands',
+                'upload/homebrands',
+                [$id],
+                [
+                    'name' => $name
+                ],
+                $debug
+            );
             if($debug) {
                 $logger->tracelog(json_encode($resultUpload));
             }
-			$this->upd(array(
-				'type' => 'img',
-				'data' => array(
-					'id_slide' => $id,
-					'img_slide' => $resultUpload['file']
-				)
-			));
+            /*$this->upd(
+                'img',
+                [
+                    'id_slide' => $id,
+                    'img_slide' => $resultUpload['file']
+                ]
+            );*/
 			return $resultUpload;
 		}
 	}
@@ -219,32 +228,12 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 		}
 	}
 
-	/**
-	 * @param $id
-	 * @return bool
-	 * @throws Exception
-	 */
-	private function delete_image($id)
-	{
-		/*$makeFiles = new filesystem_makefile();
-		$path = $this->upload->dirImgUploadCollection(array(
-			'upload_root_dir' => 'upload/slideshow', //string
-			'upload_dir'      => $id //string ou array
-		));
-
-		$img = $this->getItems('img', $id, 'one', false);
-		$sizes = array('s_', 'm_', 'l_');
-
-		if (file_exists($path . $img['img_slide'])) {
-			$makeFiles->remove($path . $img['img_slide']);
-			foreach ($sizes as $prefix) {
-				$makeFiles->remove($path . $prefix . $img['img_slide']);
-			}
-			return true;
-		}
-		else {
-			throw new Exception('file: ' . $img['img_slide'] . ' is not found');
-		}*/
+    /**
+     * @param int $id
+     * @return true|void
+     * @throws Exception
+     */
+	private function deleteImage(int $id){
         $setImgDirectory = $this->routingUrl->dirUpload('upload/homebrands/' . $id,true);
 
         if (file_exists($setImgDirectory)) {
@@ -296,70 +285,56 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 				$p = $this->homebrands;
 				for ($i = 0; $i < count($p); $i++) {
 					parent::update(
-						array(
-							'type' => 'order'
-						),
-						array(
-							'id_slide'       => $p[$i],
-							'order_slide'    => $i
-						)
+                        'order',
+						[
+                            'id_slide'       => $p[$i],
+                            'order_slide'    => $i
+                        ]
 					);
 				}
 				break;
 		}
 	}
 
-	/**
-	 * Insert data
-	 * @param array $config
-	 */
-	private function add($config)
-	{
-		switch ($config['type']) {
+    /**
+     * @param string $type
+     * @param array $params
+     * @return void
+     */
+    private function add(string $type, array $params) {
+        switch ($type) {
 			case 'slide':
-				parent::insert(
-					array('type' => $config['type'])
-				);
-				break;
-			case 'slideContent':
-				parent::insert(
-					array('type' => $config['type']),
-					$config['data']
-				);
+            case 'slideContent':
+                parent::insert($type, $params);
 				break;
 		}
 	}
 
-	/**
-	 * Update data
-	 * @param array $config
-	 */
-	private function upd($config)
-	{
-		switch ($config['type']) {
-			case 'img':
-			case 'slide':
-			case 'slideContent':
-				parent::update(
-					array('type' => $config['type']),
-					$config['data']
-				);
-				break;
-		}
-	}
+    /**
+     * Update data
+     * @param string $type
+     * @param array $params
+     */
+    private function upd(string $type, array $params) {
+        switch ($type) {
+            case 'img':
+            case 'slide':
+            case 'slideContent':
+                parent::update($type, $params);
+                break;
+        }
+    }
 
-	/**
-	 * Delete a record
-	 * @param $config
-	 */
-	private function del($config)
+    /**
+     * @param string $type
+     * @param array $params
+     * @return void
+     */
+	private function del(string $type, array $params)
 	{
-		switch ($config['type']) {
+		switch ($type) {
 			case 'slide':
-				parent::delete(
-					array('type' => $config['type']),
-					$config['data']
-				);
+				parent::delete($type, $params);
 				$this->message->json_post_response(true,'delete',array('id' => $this->id));
 				break;
 		}
@@ -389,63 +364,62 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 			switch ($this->action) {
 				case 'add':
 				case 'edit':
-					if( isset($this->slide) && !empty($this->slide) ) {
-                        $logger = new debug_logger(MP_LOG_DIR);
-						$notify = 'update';
-						$img = null;
+                if( isset($this->slide) && !empty($this->slide) ) {
+                    $logger = new debug_logger(MP_LOG_DIR);
+                    $notify = 'update';
+                    $img_name = null;
 
-						if(isset($this->slide['id']) && !empty($this->slide['id'])) {
-							$img = $this->getItems('img',$this->slide['id'],'one',false);
-							$img = $img['img_slide'];
-						}
+                    if (!isset($this->slide['id']) || empty($this->slide['id'])) {
+                        $this->add('slide', ['img_slide' => null]);
 
-						if (!isset($this->slide['id'])) {
-                            //$logger->tracelog('add');
-							$this->add(array(
-								'type' => 'slide'
-							));
+                        $lastSlide = $this->getItems('lastSlide', null, 'one', false);
 
-							$lastSlide = $this->getItems('lastSlide', null,'one',false);
-							$this->slide['id'] = $lastSlide['id_slide'];
-							$notify = 'add_redirect';
-						}
+                        if (!$lastSlide) {
+                            $this->message->json_post_response(false, 'Erreur : Impossible de créer le slide');
+                            return;
+                        }
+                        //$logger->tracelog(json_encode($lastSlide));
+                        $this->slide['id'] = $lastSlide['id_slide'];
+                        $notify = 'add_redirect';
+                    }
 
-						if(isset($this->img) && !empty($this->img)) {
-							$img = $this->slide_image($img, $this->slide['id']);
-							$img = $img['file'];
-						}
-                        //$logger->tracelog(json_encode($img));
+                    $imgData = $this->getItems('img', $this->slide['id'], 'one', false);
+                    $img_name = $imgData['img_slide'] ?? null;
 
-						$this->upd(array(
-							'type' => 'img',
-							'data' => array(
-								'id' => $this->slide['id'],
-								'img' => $img
-							)
-						));
+                    if(isset($this->img)) {
+                        $this->deleteImage($this->slide['id']);
+                        $upload = $this->slide_image(filter_rsa::randMicroUI(), $this->slide['id']);
+                        $img_name = $upload['file'];
+                        $this->upd('img', [
+                            'id_slide'  => $this->slide['id'],
+                            'img_slide' => $img_name
+                        ]);
+                    }
 
-						foreach ($this->slide['content'] as $lang => $slide) {
-							$slide['id_lang'] = $lang;
-							$slide['blank_slide'] = (!isset($slide['blank_slide']) ? 0 : 1);
-							$slide['published_slide'] = (!isset($slide['published_slide']) ? 0 : 1);
-							$slideLang = $this->getItems('slideContent',array('id' => $this->slide['id'],'id_lang' => $lang),'one',false);
+                    if (isset($this->slide['content']) && is_array($this->slide['content'])) {
+                        foreach ($this->slide['content'] as $lang => $data) {
+                            if (!is_array($data)) continue;
+                            $payload = [
+                                'id_slide'         => $this->slide['id'],
+                                'id_lang'          => $lang,
+                                'title_slide'      => $data['title_slide'] ?? '',
+                                'desc_slide'       => $data['desc_slide'] ?? '',
+                                'url_slide'        => $data['url_slide'] ?? '',
+                                'blank_slide'      => !isset($data['blank_slide']) ? 0 : 1,
+                                'published_slide'  => !isset($data['published_slide']) ? 0 : 1
+                            ];
+                            //$logger->tracelog(json_encode($payload));
+                            $exists = $this->getItems('slideContent', ['id' => $this->slide['id'], 'id_lang' => $lang], 'one', false);
 
-							if($slideLang) {
-								$slide['id'] = $slideLang['id_slide_content'];
-							}
-							else {
-								$slide['id_slide'] = $this->slide['id'];
-							}
-
-							$config = array(
-								'type' => 'slideContent',
-								'data' => $slide
-							);
-
-							$slideLang ? $this->upd($config) : $this->add($config);
-						}
-						$this->message->json_post_response(true,$notify);
-					}
+                            if ($exists) {
+                                $this->upd('slideContent', $payload);
+                            } else {
+                                $this->add('slideContent', $payload);
+                            }
+                        }
+                    }
+                    $this->message->json_post_response(true, $notify);
+                }
 					else {
 						$this->modelLanguage->getLanguage();
 
@@ -461,14 +435,10 @@ class plugins_homebrands_admin extends plugins_homebrands_db
 					break;
 				case 'delete':
 					if(isset($this->id) && !empty($this->id)) {
-						if($this->delete_image($this->id)) {
-							$this->del(
-								array(
-									'type' => 'slide',
-									'data' => array(
-										'id' => $this->id
-									)
-								)
+						if($this->deleteImage($this->id)) {
+                            $this->del(
+                                'slide',
+                                ['id' => $this->id]
 							);
 						}
 					}

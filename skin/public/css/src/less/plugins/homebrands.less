@@ -3,17 +3,27 @@
 // ------------------
 #homebrands {
 	//background-color: var(--dark-color);
-	padding: 4rem 0;
-	margin-bottom: var(--spacer);
+	padding: 2rem 0 6rem 0;
+	margin-bottom: 4rem;//var(--spacer);
 	.brands {
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		//justify-content: space-between;
 		.brand{
 			position: relative;
 			padding: 0 1rem 0 1rem;
 			.figure {
 				transition: transform 0.4s;
+			}
+		}
+	}
+	&:hover, &:focus {
+		.brands{
+			.brand{
+				.figure{
+					//transform: scale(1.2) rotate(0.01deg);
+				}
 			}
 		}
 	}
@@ -30,7 +40,9 @@
 		//background-color: var(--dark-color);
 		padding: 4rem 0;
 		.brands {
-			flex-direction: column;
+			//flex-direction: column;
+			flex-flow: row wrap;
+			justify-content: space-evenly;
 			.brand{
 				padding: 0 0 2rem 0;
 				&:last-child {

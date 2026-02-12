@@ -102,25 +102,19 @@ class plugins_homebrands_db
     }
 
     /**
-     * @param array $config
+     * @param string $type
      * @param array $params
-     * @return bool|void
+     * @return bool
      */
-    public function insert(array $config, array $params = []) {
-
-		switch ($config['type']) {
+    public function insert(string $type, array $params = []): bool {
+		switch ($type) {
 			case 'slide':
                 $query = 'INSERT INTO mc_homebrands(img_slide, order_slide) 
-						SELECT img_slide, COUNT(id_slide) FROM mc_homebrands';
-				break;
+                    VALUES (:img_slide, (SELECT IFNULL(MAX(order_slide), 0) + 1 FROM mc_homebrands AS t))';
+                break;
 			case 'slideContent':
                 $query = 'INSERT INTO mc_homebrands_content(id_slide, id_lang, title_slide, desc_slide, url_slide, blank_slide, published_slide)
 						VALUES (:id_slide, :id_lang, :title_slide, :desc_slide, :url_slide, :blank_slide, :published_slide)';
-				break;
-			case 'img':
-                $query = 'UPDATE mc_homebrands 
-						SET img_slide = :img_slide
-						WHERE id_slide = :id_slide';
 				break;
             default:
                 return false;
@@ -133,16 +127,17 @@ class plugins_homebrands_db
         catch (Exception $e) {
             if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
             $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+            return false;
         }
     }
 
     /**
-     * @param array $config
+     * @param string $type
      * @param array $params
-     * @return bool|void
+     * @return bool
      */
-    public function update(array $config, array $params = []) {
-        switch ($config['type']) {
+    public function update(string $type, array $params = []): bool {
+        switch ($type) {
 			case 'slideContent':
                 $query = 'UPDATE mc_homebrands_content
 						SET 
@@ -151,15 +146,14 @@ class plugins_homebrands_db
 							url_slide = :url_slide,
 							blank_slide = :blank_slide,
 							published_slide = :published_slide
-						WHERE id_slide_content = :id 
+						WHERE id_slide = :id_slide 
 						AND id_lang = :id_lang';
 				break;
-			case 'img':
-                $query = 'UPDATE mc_homebrands
-						SET 
-							img_slide = :img
-						WHERE id_slide = :id';
-				break;
+            case 'img':
+                $query = 'UPDATE mc_homebrands 
+						SET img_slide = :img_slide
+						WHERE id_slide = :id_slide';
+                break;
 			case 'order':
                 $query = 'UPDATE mc_homebrands 
 						SET order_slide = :order_slide
@@ -176,16 +170,17 @@ class plugins_homebrands_db
         catch (Exception $e) {
             if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
             $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+            return false;
         }
     }
 
     /**
-     * @param array $config
+     * @param string $type
      * @param array $params
      * @return bool
      */
-    public function delete(array $config, array $params = []): bool {
-		switch ($config['type']) {
+    public function delete(string $type, array $params = []): bool {
+		switch ($type) {
 			case 'slide':
                 $query = 'DELETE FROM mc_homebrands
 						WHERE id_slide = :id';
@@ -202,5 +197,6 @@ class plugins_homebrands_db
             if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
             $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
         }
+        return false;
 	}
 }
